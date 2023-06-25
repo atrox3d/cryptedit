@@ -1,17 +1,49 @@
 #!/usr/bin/env bash
 
-PASSWORD=10010
+PASSWORD=10010          # TODO: mettere password in env
 PLAINFILE=secret.txt
 ENCFILE=secret.enc
 
-echo DECRYPT...
-echo openssl enc -d -aes-256-cbc -in "${PLAINFILE}" -out "${ENCFILE}" -k "${PASSWORD}"
+if  [ ! -f ${PLAINFILE} ]
+then
+    echo -n "DECRITTO ${ENCFILE}..."
+    openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${PLAINFILE}" -k "${PASSWORD}" 2> dec-error.log && {
+        echo "Ok"
+    } || {
+        echo "ERRORE DECRITTANDO ${ENCFILE} !!!"
+        echo "Termino programma"
+        exit 1
+    }
+    
+else
+    echo "ERRORE | il file ${PLAINFILE} esiste"
+    exit 2
+fi
 
-echo EDIT...
-open -W secret.txt
+echo -n "EDIT ${PLAINFILE}..."
+open -W secret.txt && {
+    echo "Ok"
+} || {
+    echo "ERRORE aprendo ${PLAINFILE} per editing !!!"
+    exit 3
+}
 
-echo ENCRYPT...
-echo openssl enc -aes-256-cbc -out "${PLAINFILE}" -in "${ENCFILE}" -k "${PASSWORD}"
+echo -n "CRITTO ${ENCFILE}..."
+openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${PLAINFILE}" -k "${PASSWORD}"  2> enc-error.log && {
+        echo "Ok"
+} || {
+    echo "ERRORE DECRITTANDO ${ENCFILE} !!!"
+    echo "Termino programma"
+    exit 4
+}
 
-echo done
+echo -n "CANCELLO ${PLAINFILE}..."
+rm ${PLAINFILE} && {
+    echo "Ok"
+} || {
+    echo "ERRORE cancellando ${PLAINFILE} !!!"
+    exit 3
+}
+echo FINE
+
 
