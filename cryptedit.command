@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PASSWORD=10010          # TODO: mettere password in env: zshrc something...
+PASSWORD=10010          # TODO: la password va DIGITATA
 DATAFILE=secret.txt     # percorso file dati
 ENCFILE=secret.enc      # percorso file criptato
 
