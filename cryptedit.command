@@ -19,6 +19,7 @@ function die()
     message="${1}"
     echo -e "\nFATAL | ${message}"
     echo "Termino programma"
+    echo "per consultare log aprire: ${LOGFILE}"
     exit 1
 }
 #
@@ -142,5 +143,6 @@ function get_password()
     }
 
     echo FINE
+    echo "per consultare log aprire: ${LOGFILE}"
 } 2>&1 | tee "${LOGFILE}"
 
