@@ -16,6 +16,16 @@ function decrypt()
 {
     openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2> enc-error.log
 }
+
+function password_or_die()
+{
+    read -sp 'PASSWORD: ' ENCPASS
+    [ "${ENCPASS}" == "" ] && {
+        echo "FATAL | per procedere e' necessario inserire una password"
+        exit 1
+}
+
+}
 #
 # TODO: creare un unico log
 #
@@ -23,12 +33,7 @@ function decrypt()
 #
 # chiedo password prima di iniziare
 #
-read -sp 'PASSWORD: ' ENCPASS
-[ "${ENCPASS}" == "" ] && {
-    echo "FATAL | per procedere e' necessario inserire una password"
-    exit 1
-}
-
+password_or_die
 #
 # TODO il file dati non dovrebbe esistere, pena la sovrascrittura
 # dei dati durante la decrittazione
