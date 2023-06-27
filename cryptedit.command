@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+#############################################################################
+#
+# CONFIG
+#
+#############################################################################
 DATAPATH="$(dirname $0)"                # percorso dati == percorso script
 
 LOGFILENAME=$(basename $0 .command).log # <nome script>.log
@@ -9,7 +14,11 @@ ENCFILENAME=secret.enc                  # nome file criptato
 LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file dati
 DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
-
+#############################################################################
+#
+# FUNZIONI
+#
+#############################################################################
 #
 # esce dallo script
 #
