@@ -11,7 +11,7 @@ DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
 
 #
-#
+# esce dallo script
 #
 function die()
 {
@@ -23,7 +23,7 @@ function die()
     exit 1
 }
 #
-#
+# cancella file dati in chiaro
 #
 function delete_datafile()
 {
@@ -54,7 +54,6 @@ function encrypt()
 }
 #
 # chiede password: se vuota esce male
-# TODO: separare die()
 #
 function get_password()
 {
@@ -62,9 +61,11 @@ function get_password()
     echo ""
     [ "${ENCPASS}" == "" ] && return 1 || return 0
 }
+#############################################################################
 #
-# TODO: creare cleanup
+# MAIN
 #
+#############################################################################
 {
     #
     # chiedo password prima di iniziare
@@ -85,6 +86,7 @@ function get_password()
         } || {
             #
             # openssl ha restituito un errore
+            # cancello file dati errato ed esco
             #
             echo ""
             delete_datafile            
@@ -145,4 +147,3 @@ function get_password()
     echo FINE
     echo "per consultare log aprire: ${LOGFILE}"
 } 2>&1 | tee "${LOGFILE}"
-
