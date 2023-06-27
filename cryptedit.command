@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-DATAPATH="$(dirname $0)"
-DATAFILE="${DATAPATH}/secret.txt"     # percorso file dati
-ENCFILE="${DATAPATH}/secret.enc"      # percorso file criptato
+DATAPATH="$(dirname $0)"                # percorso dati == percorso script
+DATAFILENAME=secret.txt                 # nome file dati
+ENCFILENAME=secret.enc                  # nome file criptato
+DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
+ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
 
 #
 # TODO: creare un unico log
