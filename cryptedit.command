@@ -6,6 +6,16 @@ ENCFILENAME=secret.enc                  # nome file criptato
 DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
 
+
+function encrypt()
+{
+    openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}" 2> dec-error.log
+}
+
+function decrypt()
+{
+    openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2> enc-error.log
+}
 #
 # TODO: creare un unico log
 #
@@ -29,7 +39,7 @@ then
     # il file dati non esiste, procedo alla decrittazione
     #
     echo -n "DECRITTO ${ENCFILE}..."
-    openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}" 2> dec-error.log && {
+    encrypt && {
         echo "Ok"
     } || {
         #
@@ -69,7 +79,7 @@ open -W "${DATAFILE}" && {
 # procedo alla crittografia del file
 #
 echo -n "CRITTO ${ENCFILE}..."
-openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2> enc-error.log && {
+decrypt && {
         echo "Ok"
 } || {
     #
