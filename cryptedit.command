@@ -81,11 +81,31 @@ function get_password()
     #
     get_password || die "e' necessario inserire una password per continuare"
     #
-    # TODO il file dati non dovrebbe esistere, pena la sovrascrittura
-    # dei dati durante la decrittazione
+    # entrambi i file dati non dovrebbe esistere, pena la sovrascrittura
+    # dei dati durante la decrittazione !!!
+    # solo il file .enc deve essere presente
     #
-    if  [ ! -f ${DATAFILE} ]
+    if  [ -f "${DATAFILE}" -a -f "${ENCFILE}" ]
     then
+        die "entrambi i file ${DATAFILE} e ${ENCFILE} esistono, impossibile continuare"
+    fi
+    #
+    # il file .enc deve esistere
+    #
+    if  [ ! -f "${ENCFILE}" ]
+    then
+        die "il file ${ENCFILE} non esiste, procedere alla prima crittografia"
+    fi
+    #
+    # ultima verifica: il file dati non deve esistere
+    #
+    if  [ -f "${DATAFILE}" ]
+    then
+        #
+        # il file dati esiste, impossibile continuare
+        #
+        die "il file ${DATAFILE} esiste, continuando verrebbe sovrascritto"
+    else
         #
         # il file dati non esiste, procedo alla decrittazione
         #
@@ -99,13 +119,8 @@ function get_password()
             #
             echo ""
             delete_datafile            
-            die "errore decriptando ${ENCFILE} !!!"
+            die "errore decriptando ${ENCFILE}, verificare che la password sia corretta!"
         }
-    else
-        #
-        # il file dati esiste, impossibile continuare
-        #
-        die "il file ${DATAFILE} esiste"
     fi
 
     #
