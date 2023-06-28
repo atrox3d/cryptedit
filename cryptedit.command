@@ -14,11 +14,41 @@ ENCFILENAME=secret.enc                  # nome file criptato
 LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file dati
 DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
+
+NEWINSTALL=false
 #############################################################################
 #
 # FUNZIONI
 #
 #############################################################################
+function get_options()
+{
+    while getopts ":i:o:n" opt
+    do
+        case "${opt}" in
+            i)
+                DATAFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
+            ;;
+            o)
+                ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
+            ;;
+            n)
+                NEWINSTALL=true
+            ;;
+            \?)
+                die "opzione non riconosciuta: -${opt}"
+            ;;
+            :)
+                die "l'opzione -${OPTARG} richiede un parametro"
+            ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
+
+    echo "DATAFILE=${DATAFILE}"
+    echo "ENCFILE=${ENCFILE}"
+    echo "NEWINSTALL=${NEWINSTALL}"
+}
 #
 # esce dallo script
 #
@@ -75,6 +105,9 @@ function get_password()
 # MAIN
 #
 #############################################################################
+get_options ${*}
+exit
+
 {
     #
     # chiedo password prima di iniziare
