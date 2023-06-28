@@ -28,12 +28,15 @@ function get_options()
         case "${opt}" in
             i)
                 DATAFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
+                echo "DATAFILE=${DATAFILE}"
             ;;
             o)
                 ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
+                echo "ENCFILE=${ENCFILE}"
             ;;
             n)
                 NEWINSTALL=true
+                echo "NEWINSTALL=${NEWINSTALL}"
             ;;
             \?)
                 die "opzione non riconosciuta: -${opt}"
@@ -44,10 +47,6 @@ function get_options()
         esac
     done
     shift "$((OPTIND-1))"
-
-    echo "DATAFILE=${DATAFILE}"
-    echo "ENCFILE=${ENCFILE}"
-    echo "NEWINSTALL=${NEWINSTALL}"
 }
 #
 # esce dallo script
@@ -105,10 +104,8 @@ function get_password()
 # MAIN
 #
 #############################################################################
-get_options ${*}
-exit
-
 {
+    get_options ${*}
     #
     # chiedo password prima di iniziare
     #
