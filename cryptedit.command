@@ -24,7 +24,7 @@ ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
 #
 function timestamp()
 {
-    echo "${date '+%Y/%m/%d-%H:%M:%S'}"
+    echo "$(date '+%Y/%m/%d-%H:%M:%S')"
 }
 #
 # esce dallo script
@@ -83,6 +83,7 @@ function get_password()
 #
 #############################################################################
 {
+    timestamp
     #
     # chiedo password prima di iniziare
     #
