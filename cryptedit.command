@@ -20,6 +20,13 @@ ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
 #
 #############################################################################
 #
+# ritorna timestamp corrente
+#
+function timestamp()
+{
+    echo "${date '+%Y/%m/%d-%H:%M:%S'}"
+}
+#
 # esce dallo script
 #
 function die()
