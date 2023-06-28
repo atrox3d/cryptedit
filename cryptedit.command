@@ -21,9 +21,18 @@ NEWINSTALL=false
 # FUNZIONI
 #
 #############################################################################
+function get_help()
+{
+    echo "SINTASSI | ${0} -[ionh]"
+    echo "SINTASSI | -h questo help"
+    echo "SINTASSI | -i input file"
+    echo "SINTASSI | -o output file"
+    echo "SINTASSI | -n nuova installazione"
+
+}
 function get_options()
 {
-    while getopts ":i:o:n" opt
+    while getopts ":i:o:nh" opt
     do
         case "${opt}" in
             i)
@@ -38,10 +47,16 @@ function get_options()
                 NEWINSTALL=true
                 echo "NEWINSTALL=${NEWINSTALL}"
             ;;
+            h)
+                get_help
+                exit
+            ;;
             \?)
+                get_help
                 die "opzione non riconosciuta: -${opt}"
             ;;
             :)
+                get_help
                 die "l'opzione -${OPTARG} richiede un parametro"
             ;;
         esac
@@ -105,6 +120,9 @@ function get_password()
 #
 #############################################################################
 {
+    #
+    # elabora eventuali opzioni di comando
+    #
     get_options ${*}
     #
     # chiedo password prima di iniziare
