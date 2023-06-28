@@ -11,7 +11,7 @@ LOGFILENAME=$(basename $0 .command).log # <nome script>.log
 DATAFILENAME=secret.txt                 # nome file dati
 ENCFILENAME=secret.enc                  # nome file criptato
 
-LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file dati
+LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file log
 DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
 
@@ -21,6 +21,9 @@ NEWINSTALL=false
 # FUNZIONI
 #
 #############################################################################
+#
+# help dello script
+#
 function get_help()
 {
     echo "SINTASSI | ${0} -[ionh]"
@@ -30,6 +33,9 @@ function get_help()
     echo "SINTASSI | -n nuova installazione"
 
 }
+#
+# gestisce le opzioni di linea di comando
+#
 function get_options()
 {
     while getopts ":i:o:nh" opt
@@ -40,22 +46,24 @@ function get_options()
                 echo "DATAFILE=${DATAFILE}"
             ;;
             o)
-                ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
+                ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file criptato
                 echo "ENCFILE=${ENCFILE}"
             ;;
             n)
-                NEWINSTALL=true
+                NEWINSTALL=true                  # TODO: gestire nuova installazione
                 echo "NEWINSTALL=${NEWINSTALL}"
             ;;
             h)
-                get_help
+                get_help                         # mostra aiuto ed esce
                 exit
             ;;
             \?)
+                # errore opzione non prevista
                 get_help
                 die "opzione non riconosciuta: -${opt}"
             ;;
             :)
+                # errore parametro mancante
                 get_help
                 die "l'opzione -${OPTARG} richiede un parametro"
             ;;
