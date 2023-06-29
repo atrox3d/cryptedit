@@ -5,6 +5,7 @@
 # CONFIG
 #
 #############################################################################
+SCRIPTPATH="$(dirname $0)"              # percorso script == percorso dati
 DATAPATH="$(dirname $0)"                # percorso dati == percorso script
 
 LOGFILENAME=$(basename $0 .command).log # <nome script>.log
