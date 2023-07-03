@@ -144,7 +144,10 @@ function get_password()
     #
     # elabora eventuali opzioni di comando
     #
-    get_options ${*}
+    if $ENABLE_OPTIONS
+    then
+        get_options ${*}
+    fi
     #
     # chiedo password prima di iniziare
     #
