@@ -34,11 +34,54 @@ ENABLE_MODULES=false                    # TODO
 #
 #############################################################################
 #
-# ritorna timestamp corrente
+# help dello script
 #
-function timestamp()
+function get_help()
 {
-    echo "$(date '+%Y/%m/%d-%H:%M:%S')"
+    echo "SINTASSI | ${0} -[ionh]"
+    echo "SINTASSI | -h questo help"
+    echo "SINTASSI | -i input file"
+    echo "SINTASSI | -o output file"
+    echo "SINTASSI | -n nuova installazione"
+
+}
+#
+# gestisce le opzioni di linea di comando
+#
+function get_options()
+{
+    while getopts ":i:o:nh" opt
+    do
+        case "${opt}" in
+            i)
+                DATAFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
+                echo "DATAFILE=${DATAFILE}"
+            ;;
+            o)
+                ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file criptato
+                echo "ENCFILE=${ENCFILE}"
+            ;;
+            n)
+                NEWINSTALL=true                  # TODO: gestire nuova installazione
+                echo "NEWINSTALL=${NEWINSTALL}"
+            ;;
+            h)
+                get_help                         # mostra aiuto ed esce
+                exit
+            ;;
+            \?)
+                # errore opzione non prevista
+                get_help
+                die "opzione non riconosciuta: -${opt}"
+            ;;
+            :)
+                # errore parametro mancante
+                get_help
+                die "l'opzione -${OPTARG} richiede un parametro"
+            ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
 }
 #
 # esce dallo script
@@ -98,6 +141,10 @@ function get_password()
 #############################################################################
 {
     timestamp
+    #
+    # elabora eventuali opzioni di comando
+    #
+    get_options ${*}
     #
     # chiedo password prima di iniziare
     #
