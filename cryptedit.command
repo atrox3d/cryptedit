@@ -5,16 +5,29 @@
 # CONFIG
 #
 #############################################################################
+#
+# percorsi base
+#
 SCRIPTPATH="$(dirname $0)"              # percorso script == percorso dati
 DATAPATH="$(dirname $0)"                # percorso dati == percorso script
-
+#
+# nomi files
+#
 LOGFILENAME=$(basename $0 .command).log # <nome script>.log
 DATAFILENAME=secret.txt                 # nome file dati
 ENCFILENAME=secret.enc                  # nome file criptato
-
+#
+# percorsi di lavoro
+#
 LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file dati
 DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
+#
+# opzioni, nel caso si vogliano implementare
+#
+ENABLE_OPTIONS=false                    # TODO
+ENABLE_HISTORY=false                    # TODO
+ENABLE_MODULES=false                    # TODO
 #############################################################################
 #
 # FUNZIONI
