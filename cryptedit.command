@@ -96,6 +96,13 @@ function die()
     exit 1
 }
 #
+# ritorna timestamp corrente
+#
+function timestamp()
+{
+    echo "$(date '+%Y/%m/%d-%H:%M:%S')"
+}
+#
 # cancella file dati in chiaro
 #
 function delete_datafile()
