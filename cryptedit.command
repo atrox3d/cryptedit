@@ -9,8 +9,8 @@ SCRIPTPATH="$(dirname $0)"              # percorso script == percorso dati
 DATAPATH="$(dirname $0)"                # percorso dati == percorso script
 
 LOGFILENAME=$(basename $0 .command).log # <nome script>.log
-DATAFILENAME=secret.txt                 # nome file dati
-ENCFILENAME=secret.enc                  # nome file criptato
+DATAFILENAME=iLok.txt                   # nome file dati
+ENCFILENAME=iLok.auth                   # nome file criptato
 
 LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file dati
 DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
