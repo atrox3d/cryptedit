@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-DATAFILE="${1}"
-ENCFILE="${2}"
+ENCFILE="${1}"
+DATAFILE="${2}"
 ENCPASS="${3}"
 
 [ ${#} -ge 3 ] || {
