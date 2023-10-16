@@ -156,13 +156,6 @@ function get_password()
         get_options ${*}
     fi
     #
-    # chiedo password prima di iniziare
-    #
-    while ! get_password
-    do
-        echo "ERRORE | e' necessario inserire una password per continuare"
-    done
-    #
     # entrambi i file dati non dovrebbe esistere, pena la sovrascrittura
     # dei dati durante la decrittazione !!!
     # solo il file .enc deve essere presente
@@ -187,23 +180,32 @@ function get_password()
         # il file dati esiste, impossibile continuare
         #
         die "il file ${DATAFILE} esiste, continuando verrebbe sovrascritto"
-    else
-        #
-        # il file dati non esiste, procedo alla decrittazione
-        #
-        echo -n "DECRITTO ${ENCFILE}..."
-        decrypt && {
-            echo "Ok"
-        } || {
-            #
-            # openssl ha restituito un errore
-            # cancello file dati errato ed esco
-            #
-            echo ""
-            delete_datafile            
-            die "errore decriptando ${ENCFILE}, verificare che la password sia corretta!"
-        }
     fi
+
+    #
+    # il file dati non esiste, procedo alla decrittazione
+    #
+
+    #
+    # chiedo password prima di iniziare
+    #
+    while ! get_password
+    do
+        echo "ERRORE | e' necessario inserire una password per continuare"
+    done
+
+    echo -n "DECRITTO ${ENCFILE}..."
+    decrypt && {
+        echo "Ok"
+    } || {
+        #
+        # openssl ha restituito un errore
+        # cancello file dati errato ed esco
+        #
+        echo ""
+        delete_datafile            
+        die "errore decriptando ${ENCFILE}, verificare che la password sia corretta!"
+    }
 
     #
     # se non ci sono errori il file dati e' presente
