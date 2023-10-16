@@ -139,7 +139,7 @@ function get_password()
 {
     read -sp 'PASSWORD: ' ENCPASS
     echo ""
-    [ "${ENCPASS}" == "" ] && return 1 || return 0
+    [ -z "${ENCPASS}" ] && return 1 || return 0
 }
 #############################################################################
 #
@@ -158,7 +158,10 @@ function get_password()
     #
     # chiedo password prima di iniziare
     #
-    get_password || die "e' necessario inserire una password per continuare"
+    while ! get_password
+    do
+        echo "ERRORE | e' necessario inserire una password per continuare"
+    done
     #
     # entrambi i file dati non dovrebbe esistere, pena la sovrascrittura
     # dei dati durante la decrittazione !!!
