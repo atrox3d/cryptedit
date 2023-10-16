@@ -8,14 +8,14 @@
 #
 # percorsi base
 #
-SCRIPTPATH="$(dirname $0)"              # percorso script == percorso dati
-DATAPATH="$(dirname $0)"                # percorso dati == percorso script
+SCRIPTPATH="$(dirname "${0}")"          # percorso script == percorso dati
+DATAPATH="$(dirname "${0}")"            # percorso dati == percorso script
 #
 # nomi files
 #
-LOGFILENAME=$(basename $0 .command).log # <nome script>.log
-DATAFILENAME=secret.txt                 # nome file dati
-ENCFILENAME=secret.enc                  # nome file criptato
+LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
+DATAFILENAME=iLok.xlsx                  # nome file dati
+ENCFILENAME=iLok.auth                   # nome file criptato
 #
 # percorsi di lavoro
 #
@@ -108,7 +108,7 @@ function timestamp()
 function delete_datafile()
 {
     echo -n "CANCELLO ${DATAFILE}..."
-    rm ${DATAFILE}
+    rm "${DATAFILE}"
 }
 #
 # decripta il file
