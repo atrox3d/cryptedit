@@ -119,7 +119,6 @@ function decrypt()
 {
     local errorcode
     "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>> "${LOGFILE}"
-    # openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}"
     errorcode=$?
     echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
     return ${errorcode}
@@ -131,7 +130,6 @@ function encrypt()
 {
     local errorcode
     "${ENCRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>> "${LOGFILE}"
-    # openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2>> "${LOGFILE}"
     errorcode=$?
     echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
     return ${errorcode}
@@ -235,7 +233,7 @@ function get_password()
     # e l'editor e' stato chiuso
     # procedo alla crittografia del file
     #
-    echo -n "CRIPTO ${ENCFILE}..."
+    echo -n "INFO  | CRIPTO ${ENCFILE}..."
     if encrypt
     then
             echo "Ok"
