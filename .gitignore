@@ -3,3 +3,5 @@ secret.*
 .DS_Store
 iLok.auth
 iLok.xlsx
+*.cpgz*
+
