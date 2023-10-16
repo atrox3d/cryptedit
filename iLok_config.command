@@ -91,8 +91,8 @@ function die()
     local message
     message="${1}"
     echo -e "\nFATAL | ${message}"
-    echo "Termino programma"
-    echo "per consultare log aprire: ${LOGFILE}"
+    echo "FATAL | Termino programma"
+    echo "FATAL | per consultare log aprire: ${LOGFILE}"
     exit 1
 }
 #
@@ -107,7 +107,7 @@ function timestamp()
 #
 function delete_datafile()
 {
-    echo -n "CANCELLO ${DATAFILE}..."
+    echo -n "INFO  | CANCELLO ${DATAFILE}..."
     rm "${DATAFILE}"
 }
 #
@@ -118,7 +118,7 @@ function decrypt()
     local errorcode
     openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}" 2>> "${LOGFILE}"
     errorcode=$?
-    echo -e "\nencrypt error code: ${errorcode}" >> "${LOGFILE}"
+    echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
     return ${errorcode}
 }
 #
@@ -129,7 +129,7 @@ function encrypt()
     local errorcode
     openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2>> "${LOGFILE}"
     errorcode=$?
-    echo -e "\nencrypt error code: ${errorcode}" >> "${LOGFILE}"
+    echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
     return ${errorcode}
 }
 #
@@ -191,13 +191,14 @@ function get_password()
     #
     while ! get_password
     do
-        echo "ERRORE | e' necessario inserire una password per continuare"
+        echo "ERROR | e' necessario inserire una password per continuare"
     done
 
-    echo -n "DECRITTO ${ENCFILE}..."
-    decrypt && {
+    echo -n "INFO  | DECRITTO ${ENCFILE}..."
+    if decrypt
+    then
         echo "Ok"
-    } || {
+    else
         #
         # openssl ha restituito un errore
         # cancello file dati errato ed esco
@@ -205,22 +206,23 @@ function get_password()
         echo ""
         delete_datafile            
         die "errore decriptando ${ENCFILE}, verificare che la password sia corretta!"
-    }
+    fi
 
     #
     # se non ci sono errori il file dati e' presente
     # lo apro con editor di sistema e attendo...
     #
-    echo -n "EDIT ${DATAFILE}..."
-    open -W "${DATAFILE}" && {
+    echo -n "INFO  | EDIT ${DATAFILE}..."
+    if open -W "${DATAFILE}"
+    then
         echo "Ok"
-    } || {
+    else
         #
         # l'editor ha resistuito un errore
         # TODO: provare a catturare errore
         #
         die "errore aprendo ${DATAFILE} per editing !!!"
-    }
+    fi
 
     #
     # l'editing e' andato a buon fine
@@ -228,30 +230,32 @@ function get_password()
     # procedo alla crittografia del file
     #
     echo -n "CRIPTO ${ENCFILE}..."
-    encrypt && {
+    if encrypt
+    then
             echo "Ok"
-    } || {
+    else
         #
         # openssl ha restituito un errore
         #
         die "errore decriptando ${ENCFILE} !!!"
-    }
+    fi
 
     #
     # la crittografia e' andata a buon fine
     # procedo con la cancellazione del file dati
     # TODO: aggiungere check esistenza file crittato
     #
-    delete_datafile && {
+    if delete_datafile
+    then
         echo "Ok"
-    } || {
+    else
         #
         # la cancellazione del file dati non
         # e' andata a buon fine
         #
         die "errore cancellando ${DATAFILE} !!!"
-    }
+    fi
 
-    echo FINE
-    echo "per consultare log aprire: ${LOGFILE}"
+    echo "INFO  | FINE"
+    echo "INFO  | per consultare log aprire: ${LOGFILE}"
 } 2>&1 | tee "${LOGFILE}"
