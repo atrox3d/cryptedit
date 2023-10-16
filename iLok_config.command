@@ -14,8 +14,10 @@ DATAPATH="$(dirname "${0}")"            # percorso dati == percorso script
 # nomi files
 #
 LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
-DATAFILENAME=iLok.xlsx                  # nome file dati
-ENCFILENAME=iLok.auth                   # nome file criptato
+DATAFILENAME=iLok.xlsx                      # nome file dati
+ENCFILENAME=iLok.auth                       # nome file criptato
+ENCRYPT="${SCRIPTPATH}/encrypt"             # script encryption
+DECRYPT="${SCRIPTPATH}/decrypt"             # script decryption
 #
 # percorsi di lavoro
 #
@@ -116,7 +118,8 @@ function delete_datafile()
 function decrypt()
 {
     local errorcode
-    openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}" 2>> "${LOGFILE}"
+    "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>> "${LOGFILE}"
+    # openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}"
     errorcode=$?
     echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
     return ${errorcode}
@@ -127,7 +130,8 @@ function decrypt()
 function encrypt()
 {
     local errorcode
-    openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2>> "${LOGFILE}"
+    "${ENCRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>> "${LOGFILE}"
+    # openssl enc -aes-256-cbc -out "${ENCFILE}" -in "${DATAFILE}" -k "${ENCPASS}" 2>> "${LOGFILE}"
     errorcode=$?
     echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
     return ${errorcode}

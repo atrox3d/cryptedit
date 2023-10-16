@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+ENCFILE="${1}"
+DATAFILE="${2}"
+ENCPASS="${3}"
+
+openssl enc -d -aes-256-cbc -in "${ENCFILE}" -out "${DATAFILE}" -k "${ENCPASS}"

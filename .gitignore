@@ -2,3 +2,4 @@ secret.*
 *.log
 .DS_Store
 iLok.auth
+iLok.xlsx
