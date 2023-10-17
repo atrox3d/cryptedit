@@ -158,7 +158,7 @@ function get_password()
         get_options ${*}
     fi
 
-    echo -n "INFO  | controllo files..."
+    echo "INFO  | controllo files..."
     #
     # entrambi i file dati non dovrebbe esistere, pena la sovrascrittura
     # dei dati durante la decrittazione !!!
@@ -189,7 +189,7 @@ function get_password()
     #
     # il file dati non esiste, procedo alla decrittazione
     #
-    echo "Ok"
+    echo "INFO  | controllo files:  OK"
     #
     # chiedo password prima di iniziare
     #
