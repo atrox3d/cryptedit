@@ -118,9 +118,9 @@ function delete_datafile()
 function decrypt()
 {
     local errorcode
-    "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>> "${LOGFILE}"
+    "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}"
     errorcode=$?
-    echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
+    echo -e "\nINFO  | encrypt error code: ${errorcode}"
     return ${errorcode}
 }
 #
@@ -129,9 +129,9 @@ function decrypt()
 function encrypt()
 {
     local errorcode
-    "${ENCRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>> "${LOGFILE}"
+    "${ENCRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}"
     errorcode=$?
-    echo -e "\nINFO  | encrypt error code: ${errorcode}" >> "${LOGFILE}"
+    echo -e "\nINFO  | encrypt error code: ${errorcode}"
     return ${errorcode}
 }
 #
@@ -139,7 +139,7 @@ function encrypt()
 #
 function get_password()
 {
-    read -sp 'PASSWORD: ' ENCPASS
+    read -sp 'PASSWORD: ' ENCPASS 2>&1
     echo ""
     [ -z "${ENCPASS}" ] && return 1 || return 0
 }
@@ -262,4 +262,5 @@ function get_password()
 
     echo "INFO  | FINE"
     echo "INFO  | per consultare log aprire: ${LOGFILE}"
-} 2>&1 | tee "${LOGFILE}"
+# } 2>&1 | tee "${LOGFILE}"
+} 2>>"${LOGFILE}" | tee -a "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
