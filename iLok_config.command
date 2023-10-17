@@ -278,4 +278,5 @@ function get_password()
     echo "INFO  | per consultare log aprire: ${LOGFILE}"
 # } 2>&1 | tee "${LOGFILE}"
 # 2> >(tee -a $TEMP_ERR) 1> >(tee -a $TEMP_CHK)
-} 2>>"${LOGFILE}" | tee -a "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
+# } 2>>"${LOGFILE}" 1> >(tee -a "${LOGFILE}") # stderr to logfile, stdout to terminal and logfile
+} 1> >(tee "${LOGFILE}") 2> "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
