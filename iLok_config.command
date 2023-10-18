@@ -121,6 +121,7 @@ function delete_datafile()
 function decrypt()
 {
     local exitcode
+    echo "INFO  | ""${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "******"
     "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}"
     exitcode=$?
     echo -e "\nINFO  | encrypt exitcode: ${exitcode}"
@@ -132,6 +133,7 @@ function decrypt()
 function encrypt()
 {
     local exitcode
+    echo "INFO  | ""${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "******"
     "${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}"
     exitcode=$?
     echo -e "\nINFO  | encrypt exitcode: ${exitcode}"
@@ -161,7 +163,7 @@ function get_password()
         get_options ${*}
     fi
 
-    echo "INFO  | CHECK files..."
+    echo "INFO  | CHECK         files..."
     #
     # entrambi i file dati non dovrebbe esistere, pena la sovrascrittura
     # dei dati durante la decrittazione !!!
@@ -192,7 +194,7 @@ function get_password()
     #
     # il file dati non esiste, procedo alla decrittazione
     #
-    echo "INFO  | CHECK files...OK"
+    echo "INFO  | CHECK         files...OK"
     #
     # chiedo password prima di iniziare
     #
@@ -211,16 +213,16 @@ function get_password()
         # cancello file dati errato ed esco
         #
         echo "ERROR | DECRIPTAZIONE ${ENCFILE} FALLITA"
-    echo "INFO  | CANCELLAZIONE ${DATAFILE}..."
-    if delete_datafile
-    then
-    echo "INFO  | CANCELLAZIONE ${DATAFILE}...OK"
-    else
-        #
-        # la cancellazione del file dati non
-        # e' andata a buon fine
-        #
-        die "errore cancellando ${DATAFILE} !!!"
+        echo "INFO  | CANCELLAZIONE ${DATAFILE}..."
+        if delete_datafile
+        then
+            echo "INFO  | CANCELLAZIONE ${DATAFILE}...OK"
+        else
+            #
+            # la cancellazione del file dati non
+            # e' andata a buon fine
+            #
+            die "errore cancellando ${DATAFILE} !!!"
     fi
         die "errore decriptando ${ENCFILE}, verificare che la password sia corretta!"
     fi
@@ -229,10 +231,10 @@ function get_password()
     # se non ci sono errori il file dati e' presente
     # lo apro con editor di sistema e attendo...
     #
-    echo "INFO  | EDIT ${DATAFILE}..."
+    echo "INFO  | EDIT          ${DATAFILE}..."
     if open -W "${DATAFILE}"
     then
-        echo "INFO  | EDIT ${DATAFILE}...OK"
+        echo "INFO  | EDIT          ${DATAFILE}...OK"
     else
         #
         # l'editor ha resistuito un errore
@@ -246,10 +248,10 @@ function get_password()
     # e l'editor e' stato chiuso
     # procedo alla crittografia del file
     #
-    echo "INFO  | CRITTOGRAFIA ${ENCFILE}..."
+    echo "INFO  | CRITTOGRAFIA  ${ENCFILE}..."
     if encrypt
     then
-        echo "INFO  | CRITTOGRAFIA ${ENCFILE}...OK"
+        echo "INFO  | CRITTOGRAFIA  ${ENCFILE}...OK"
     else
         #
         # openssl ha restituito un errore
@@ -280,3 +282,5 @@ function get_password()
 # 2> >(tee -a $TEMP_ERR) 1> >(tee -a $TEMP_CHK)
 # } 2>>"${LOGFILE}" 1> >(tee -a "${LOGFILE}") # stderr to logfile, stdout to terminal and logfile
 } 1> >(tee "${LOGFILE}") 2> "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
+
+rm *.cpgz
