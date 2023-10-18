@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+
 ENCFILE="${1}"
 DATAFILE="${2}"
 ENCPASS="${3}"
 
 [ ${#} -ge 3 ] || {
-    echo "SYNTAX | ${0} encrypted_file  data_file password"
+    echo "SYNTAX | ${0} encrypted_file data_file password"
     exit 1
 }
 

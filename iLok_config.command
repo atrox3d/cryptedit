@@ -132,7 +132,7 @@ function decrypt()
 function encrypt()
 {
     local exitcode
-    "${ENCRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}"
+    "${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}"
     exitcode=$?
     echo -e "\nINFO  | encrypt exitcode: ${exitcode}"
     return ${exitcode}
