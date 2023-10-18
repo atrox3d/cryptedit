@@ -115,16 +115,31 @@ function delete_datafile()
 {
     rm "${DATAFILE}"
 }
+function print_encryption_error()
+{
+    local line
+    local lines
+    readarray -t lines <<<"${1}"
+    for line in "${lines[@]}"
+    do
+        echo "ERROR | ${line}"
+    done
+}
 #
 # decripta il file
 #
 function decrypt()
 {
     local exitcode
+    local output
     echo "INFO  | ""${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "******"
-    "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}"
+    output="$("${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>&1)"
     exitcode=$?
-    echo -e "\nINFO  | encrypt exitcode: ${exitcode}"
+    echo -e "INFO  | encrypt exitcode: ${exitcode}"
+    if [ ${exitcode} -ne 0 ]
+    then
+        print_encryption_error "${output}"
+    fi
     return ${exitcode}
 }
 #
