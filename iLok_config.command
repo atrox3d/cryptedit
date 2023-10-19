@@ -11,8 +11,12 @@
 SCRIPTPATH="$(dirname "${0}")"              # percorso script == percorso dati
 DATAPATH="${SCRIPTPATH}"                    # percorso dati == percorso script
 CONFIGPATH="${SCRIPTPATH}"                  # percorso dati == percorso script
-INCLUDEPATH="${SCRIPTPATH}"                 # percorso dati == percorso script
-
+INCLUDEPATH="${SCRIPTPATH}/.include"        # percorso dati == percorso script
+#############################################################################
+#
+# CONFIGURAZIONE AMBIENTE
+#
+#############################################################################
 CONFIG="${CONFIGPATH}/.iLok_config"
 . "${CONFIG}"
 #############################################################################
@@ -20,141 +24,8 @@ CONFIG="${CONFIGPATH}/.iLok_config"
 # FUNZIONI
 #
 #############################################################################
-#
-# help dello script
-#
-function get_help()
-{
-    echo "SINTASSI | ${0} -[ionh]"
-    echo "SINTASSI | -h questo help"
-    echo "SINTASSI | -i input file"
-    echo "SINTASSI | -o output file"
-    echo "SINTASSI | -n nuova installazione"
-
-}
-#
-# gestisce le opzioni di linea di comando
-#
-function get_options()
-{
-    while getopts ":i:o:nh" opt
-    do
-        case "${opt}" in
-            i)
-                DATAFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
-                echo "DATAFILE=${DATAFILE}"
-            ;;
-            o)
-                ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file criptato
-                echo "ENCFILE=${ENCFILE}"
-            ;;
-            n)
-                NEWINSTALL=true                  # TODO: gestire nuova installazione
-                echo "NEWINSTALL=${NEWINSTALL}"
-            ;;
-            h)
-                get_help                         # mostra aiuto ed esce
-                exit
-            ;;
-            \?)
-                # errore opzione non prevista
-                get_help
-                die "opzione non riconosciuta: -${opt}"
-            ;;
-            :)
-                # errore parametro mancante
-                get_help
-                die "l'opzione -${OPTARG} richiede un parametro"
-            ;;
-        esac
-    done
-    shift "$((OPTIND-1))"
-}
-#
-# esce dallo script
-#
-function die()
-{
-    local messages=( "${@}" )
-    local message
-
-    for message in "${messages[@]}"
-    do
-        echo "FATAL | ${message}"
-    done
-    echo "FATAL | Termino programma"
-    echo "FATAL | per consultare log aprire: ${LOGFILE}"
-    exit 1
-}
-#
-# stampa timestamp corrente
-#
-function timestamp()
-{
-    echo "$(date '+%Y/%m/%d-%H:%M:%S')"
-}
-#
-# cancella file dati in chiaro
-#
-function delete_datafile()
-{
-    rm "${DATAFILE}"
-}
-#
-# stampa errore openssl
-#
-function print_encryption_error()
-{
-    local line
-    local lines
-    readarray -t lines <<<"${1}"
-    for line in "${lines[@]}"
-    do
-        echo "ERROR | ${line}"
-    done
-}
-#
-# decripta il file
-#
-function decrypt()
-{
-    local exitcode
-    local output
-    echo "INFO  | ""${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "******"
-    output="$("${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>&1)"
-    exitcode=$?
-    echo -e "INFO  | encrypt exitcode: ${exitcode}"
-    if [ ${exitcode} -ne 0 ]
-    then
-        print_encryption_error "${output}"
-    fi
-    return ${exitcode}
-}
-#
-# cripta il file
-#
-function encrypt()
-{
-    local exitcode
-    echo "INFO  | ""${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "******"
-    output="$("${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}" 2>&1)"
-    exitcode=$?
-    echo -e "INFO  | encrypt exitcode: ${exitcode}"
-    if [ ${exitcode} -ne 0 ]
-    then
-        print_encryption_error "${output}"
-    fi
-    return ${exitcode}
-}
-#
-# chiede password: se vuota ritorna 1s
-#
-function get_password()
-{
-    read -sp 'PASSWORD: ' ENCPASS 2>&1
-    echo ""
-    [ -z "${ENCPASS}" ] && return 1 || return 0
-}
+INCLUDE="${INCLUDEPATH}/functions.include"
+. "${INCLUDE}"
 #############################################################################
 #
 # MAIN
