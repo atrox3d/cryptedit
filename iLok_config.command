@@ -134,7 +134,7 @@ function die()
     # lo apro con editor di sistema e attendo...
     #
     info "EDIT          ${DATAFILE}..."
-    output="$(open -W "${DATAFILE}x" 2>&1)"
+    output="$(open -W "${DATAFILE}" 2>&1)"
     exitcode=$?
 
     if ${exitcode}
