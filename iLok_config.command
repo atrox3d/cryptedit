@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-#
-# esce dallo script
-#
-function die()
-{
-    local messages=( "${@}" )
-    local message
-
-    for message in "${messages[@]}"
-    do
-        echo "FATAL | ${message}"
-    done
-    echo "FATAL | Termino programma"
-    echo "FATAL | per consultare log aprire: ${LOGFILE}"
-    exit 1
-}
-
 #############################################################################
 #
 # CONFIG percorsi base
@@ -34,6 +17,22 @@ INCLUDEPATH="${SCRIPTPATH}/.include"        # percorso dati == percorso script
 #############################################################################
 LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
 LOGFILE="${DATAPATH}/${LOGFILENAME}"        # percorso file dati
+#
+# esce dallo script
+#
+function die()
+{
+    local messages=( "${@}" )
+    local message
+
+    for message in "${messages[@]}"
+    do
+        echo "FATAL | ${message}"
+    done
+    echo "FATAL | Termino programma"
+    echo "FATAL | per consultare log aprire: ${LOGFILE}"
+    exit 1
+}
 #
 # inizio piping verso LOGFILE
 #
