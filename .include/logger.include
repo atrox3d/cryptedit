@@ -1,0 +1,280 @@
+#!/usr/bin/env bash
+#
+#	current directory and script name
+#
+HERE="$(dirname ${BASH_SOURCE[0]})"
+NAME="$(basename ${BASH_SOURCE[0]})"
+#
+#	debug disabled - default
+#
+__LOGGER_DEBUG=no
+######################################################
+#
+#	debug helpers
+#
+######################################################
+function __DEBUG_ENABLE()  { __LOGGER_DEBUG=yes; }		# enable debug
+function __DEBUG_DISABLE() { __LOGGER_DEBUG=no; }		# disable debug
+#
+#	toggle enable status of debug
+#
+function __DEBUG_TOGGLE()
+{
+	case "${__LOGGER_DEBUG}" in
+		yes)
+			__LOGGER_DEBUG=no
+		;;
+		no)
+			__LOGGER_DEBUG=yes
+		;;
+		*)
+			#
+			#	__LOGGER_DEBUG must be yes or no
+			#
+			echo "${BASH_SOURCE[0]} | FATAL | unknown __DEBUG status : '$_LOGGER_DEBUG'"
+			exit 1
+		;;
+	esac
+}
+#
+#	echoes all parameters if _LOGGER_DEBUG == yes
+#
+function __DEBUG()
+{
+	if [ "${__LOGGER_DEBUG}" == "yes" ]
+	then
+		echo "__DEBUG | ${*}" &> /dev/stderr
+	fi
+}
+######################################################
+#
+# create associative and normal arrays
+#
+######################################################
+# associative arrays do not keep sort order:
+# 	echo ${!LOG_LEVELS[@]}: ERROR INFO WARNING FATAL SUPER DEBUG
+# 	echo ${LOG_LEVELS[@]} : 3 1 2 4 5 0
+#
+# so we use a normal array to keep that order
+# 	echo ${LOG_LEVELS_IDX[@]}: DEBUG INFO WARNING ERROR FATAL SUPER
+######################################################
+declare -A LOG_LEVELS=( [DEBUG]=0 [INFO]=1 [WARNING]=2 [ERROR]=3 [FATAL]=4 [SUPER]=5)
+declare -a LOG_LEVELS_IDX=( DEBUG INFO WARNING ERROR FATAL SUPER )
+
+DEFAULT_LEVEL="DEBUG"
+CURRENT_LEVEL="${DEFAULT_LEVEL}"
+######################################################
+#
+#
+#
+######################################################
+function logger_setlevel()
+{
+	# check first param
+	local level="${1:-UNSET}"
+
+	# upper case first param
+	level="${level^^}"
+
+	# normalize WARN to WARNING
+	[ "${level}" == "WARN" ] && level=WARNING
+
+	# if $level is not in the keys exits
+	[ "${LOG_LEVELS[${level}]+EXISTS}" == "EXISTS" ] || {
+		fatal "logger_setlevel | unknown level ${level}"
+		exit 255
+	}
+	# update current global level
+	CURRENT_LEVEL="${level}"
+
+	local _level
+	local _levels=""
+	#
+	# loop through log levels sorted
+	# creates a string that surrounds with brackets enabled levels
+	#
+	for _level in "${LOG_LEVELS_IDX[@]}"
+	do
+		if [ "${_level}" == "${level}" ]
+		then
+			_level="[${_level}"
+		fi
+		_levels="${_levels} ${_level}"
+	done
+	_levels="${_levels}]"
+
+	# super can log always
+	super "logger_setlevel | ${_levels}"
+}
+
+######################################################
+#
+# returns the level number, given the level name
+#
+######################################################
+function logger_getlevelcode()
+{
+	local level="${1:-UNSET}"
+	level="${level^^}"
+	[ "${level}" == "WARN" ] && level=WARNING
+
+	[ "${LOG_LEVELS[${level}]+EXISTS}" == EXISTS ] || {
+		fatal "logger_getlevelcode | unknown level ${level}"
+		exit 255
+	}
+	return "${LOG_LEVELS[${level}]}"
+}
+
+######################################################
+#
+# checks and returns if the level is enabled
+#
+######################################################
+function logger_islevelenabled()
+{
+	local level="${1:-UNSET}"
+	level="${level^^}"
+	[ "${level}" == "WARN" ] && level=WARNING
+
+	[ "${LOG_LEVELS[${level}]+EXISTS}" == EXISTS ] || {
+		fatal "logger_islevelenabled | unknown level ${level}"
+		exit 255
+	}
+
+	[ "${LOG_LEVELS[${level}]}" -ge "${LOG_LEVELS[${CURRENT_LEVEL}]}" ] && {
+		return 0
+	} || {
+		return 1
+	}
+}
+######################################################
+#
+#	general log function
+#
+######################################################
+function log()
+{
+	#
+	#	date and time
+	#
+	local _datestamp="$(date +'%Y/%m/%d')"
+	local _timestamp="$(date +'%H:%M:%S')"
+	#
+	#	extract tag and message
+	#
+	local _level="${1}"
+	local _message="${*:2}"
+	# local _who_width=0
+
+	# __DEBUG "$_level: $_message"
+	#
+	#	check level name
+	#
+	case ${_level,,} in
+		--debug|--info|--warning|--error|--fatal|--super)
+			#
+			#	remove "__" from level name and capitalize it
+			#
+			_level="${1:2}"
+			_level="${_level^^}"
+			#
+			#	normalize warn
+			#
+			[ "${_level}" == WARNING ] && _level=WARN
+			#
+			#	returns if level is not enabled
+			#
+			logger_islevelenabled "${_level}" || return
+			#
+			#	format level
+			#
+			printf -v _level "%-5.5s" $_level
+		;;
+		*)
+			######################################################
+			# DEFENSIVE PROGRAMMING
+			######################################################
+			echo "${BASH_SOURCE[0]} | FATAL | unknown level name: '${_level}'"  >&2
+			exit 1
+		;;
+	esac
+
+	__DEBUG "\${0} = ${0}"
+	__DEBUG "\${BASH_SOURCE[0]} = ${BASH_SOURCE[0]}"
+
+	if [ "${0}" = "bash" ]
+	then
+		#
+		#	sourcing from command line, force who to this script
+		#
+		_who="${BASH_SOURCE[0]}"
+	else
+		# _who="${0}"
+		# _who="${BASH_SOURCE[2]}"
+		#
+		#	get the first caller that is not logger
+		#
+		for _who in "${BASH_SOURCE[@]}"
+		do
+			if [ "${_who}" != "${BASH_SOURCE[0]}" ]
+			then
+				break
+			fi
+		done
+	fi
+
+	# printf -v _level "[%*.*s]" $_log_square_width $_log_square_width "$OPTARG"
+	local _formatted_who
+	printf -v _formatted_who "%20.20s" "$(basename ${_who})"
+
+	# echo "${_datestamp} | ${_timestamp} | ${_formatted_who} | ${_level} | ${_message}" >&2
+	# echo "${BASH_SOURCE[@]}"
+	echo "${_datestamp} ${_timestamp} | ${_formatted_who} | ${_level} | ${_message}" >&2
+}
+#
+# level helpers
+#
+function debug()   { log --debug   "$@"; }
+function info()    { log --info    "$@"; }
+function warning() { log --warning "$@"; }
+function warn()    { log --warning "$@"; }
+function error()   { log --error   "$@"; }
+function fatal()   { log --fatal   "$@"; }
+function super()   { log --super   "$@"; }
+#
+# test logger when sourced
+#
+function test_logger()
+{
+	debug   test debug
+	info    test info
+	warning test warning
+	error   test error
+	fatal   test fatal
+	log		wrong_level test
+}
+#
+# source or run
+#
+if [ "${BASH_SOURCE[0]}" != "${0}" ]
+then
+	info "script SOURCED, not run directly | ${NAME} | ignoring params: '${@}' | ok"
+else
+	# script called DIRECTLY, eg logger.sh info "hello"
+	#
+	# check if level function exists
+	#
+	LEVELS=(debug info warn warning error fatal)
+	LEVEL="${1}"
+	if echo "${LEVELS[@]}" | grep -qw "${LEVEL,,}"
+	then
+		#
+		#	call the function
+		#
+		# __DEBUG_ENABLE
+		"${LEVEL}" "${@:2}"
+	else
+		fatal "unknown level | ${LEVEL^^}"
+		fatal "syntax: ${NAME} {info|warn|warning|error|fatal} message"
+	fi
+fi

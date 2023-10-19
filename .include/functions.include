@@ -2,6 +2,7 @@
 
 . "${INCLUDEPATH}/options.include" || die "impossibile caricare ${INCLUDEPATH}/options.include"
 . "${INCLUDEPATH}/encryption.include" || die "impossibile caricare ${INCLUDEPATH}/encryption.include"
+. "${INCLUDEPATH}/logger.include" || die "impossibile caricare ${INCLUDEPATH}/logger.include"
 #
 # help dello script
 #
