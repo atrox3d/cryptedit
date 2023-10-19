@@ -36,7 +36,7 @@ INCLUDE="${INCLUDEPATH}/functions.include"
     #
     # elabora eventuali opzioni di comando
     #
-    if $ENABLE_OPTIONS
+    if ${ENABLE_OPTIONS}
     then
         get_options ${*}
     fi
