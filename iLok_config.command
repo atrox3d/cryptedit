@@ -149,9 +149,13 @@ function encrypt()
 {
     local exitcode
     echo "INFO  | ""${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "******"
-    "${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}"
+    output="$("${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}" 2>&1)"
     exitcode=$?
-    echo -e "\nINFO  | encrypt exitcode: ${exitcode}"
+    echo -e "INFO  | encrypt exitcode: ${exitcode}"
+    if [ ${exitcode} -ne 0 ]
+    then
+        print_encryption_error "${output}"
+    fi
     return ${exitcode}
 }
 #
