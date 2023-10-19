@@ -2,7 +2,7 @@
 #
 # nomi files
 #
-LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
+#LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
 DATAFILENAME=iLok.xlsx                      # nome file dati
 ENCFILENAME=iLok.auth                       # nome file criptato
 ENCRYPT="${SCRIPTPATH}/encrypt"             # script encryption
@@ -10,7 +10,7 @@ DECRYPT="${SCRIPTPATH}/decrypt"             # script decryption
 #
 # percorsi di lavoro
 #
-LOGFILE="${DATAPATH}/${LOGFILENAME}"        # percorso file dati
+#LOGFILE="${DATAPATH}/${LOGFILENAME}"        # percorso file dati
 DATAFILE="${DATAPATH}/${DATAFILENAME}"      # percorso file dati
 ENCFILE="${DATAPATH}/${ENCFILENAME}"        # percorso file criptato
 #

@@ -1,13 +1,27 @@
 #!/usr/bin/env bash
 
+#
+# esce dallo script
+#
+function die()
+{
+    local messages=( "${@}" )
+    local message
+
+    for message in "${messages[@]}"
+    do
+        echo "FATAL | ${message}"
+    done
+    echo "FATAL | Termino programma"
+    echo "FATAL | per consultare log aprire: ${LOGFILE}"
+    exit 1
+}
+
 #############################################################################
 #
-# CONFIG
+# CONFIG percorsi base
 #
 #############################################################################
-#
-# percorsi base
-#
 #SCRIPTPATH="$(cd "$(dirname "$0")";pwd -P)" # percorso script == percorso dati
 SCRIPTPATH="$(dirname "${0}")"              # percorso script == percorso dati
 DATAPATH="${SCRIPTPATH}"                    # percorso dati == percorso script
@@ -15,24 +29,34 @@ CONFIGPATH="${SCRIPTPATH}"                  # percorso dati == percorso script
 INCLUDEPATH="${SCRIPTPATH}/.include"        # percorso dati == percorso script
 #############################################################################
 #
-# CONFIGURAZIONE AMBIENTE
+# CONFIG log file
 #
 #############################################################################
-CONFIG="${CONFIGPATH}/.iLok_config"
-. "${CONFIG}"
-#############################################################################
+LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
+LOGFILE="${DATAPATH}/${LOGFILENAME}"        # percorso file dati
 #
-# FUNZIONI
+# inizio piping verso LOGFILE
 #
-#############################################################################
-INCLUDE="${INCLUDEPATH}/functions.include"
-. "${INCLUDE}"
-#############################################################################
-#
-# MAIN
-#
-#############################################################################
 {
+    #############################################################################
+    #
+    # CONFIGURAZIONE AMBIENTE
+    #
+    #############################################################################
+    CONFIG="${CONFIGPATH}/.iLok_config"
+    . "${CONFIG}" || die "impossibile caricare ${CONFIG}"
+    #############################################################################
+    #
+    # FUNZIONI
+    #
+    #############################################################################
+    INCLUDE="${INCLUDEPATH}/functions.include"
+    . "${INCLUDE}" || die "impossibile caricare ${INCLUDE}"
+    #############################################################################
+    #
+    # MAIN
+    #
+    #############################################################################
     timestamp
     #
     # elabora eventuali opzioni di comando

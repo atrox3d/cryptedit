@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-. "${INCLUDEPATH}/options.include"
-. "${INCLUDEPATH}/encryption.include"
+. "${INCLUDEPATH}/options.include" || die "impossibile caricare ${INCLUDEPATH}/options.include"
+. "${INCLUDEPATH}/encryption.include" || die "impossibile caricare ${INCLUDEPATH}/encryption.include"
 #
 # help dello script
 #
@@ -13,22 +13,6 @@ function get_help()
     echo "SINTASSI | -o output file"
     echo "SINTASSI | -n nuova installazione"
 
-}
-#
-# esce dallo script
-#
-function die()
-{
-    local messages=( "${@}" )
-    local message
-
-    for message in "${messages[@]}"
-    do
-        echo "FATAL | ${message}"
-    done
-    echo "FATAL | Termino programma"
-    echo "FATAL | per consultare log aprire: ${LOGFILE}"
-    exit 1
 }
 #
 # stampa timestamp corrente
