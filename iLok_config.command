@@ -9,7 +9,9 @@
 # percorsi base
 #
 SCRIPTPATH="$(dirname "${0}")"              # percorso script == percorso dati
-DATAPATH="$(dirname "${0}")"                # percorso dati == percorso script
+DATAPATH="${SCRIPTPATH}"                    # percorso dati == percorso script
+CONFIGPATH="${SCRIPTPATH}"                  # percorso dati == percorso script
+INCLUDEPATH="${SCRIPTPATH}"                 # percorso dati == percorso script
 #
 # nomi files
 #
