@@ -229,7 +229,8 @@ function log()
 
 	# echo "${_datestamp} | ${_timestamp} | ${_formatted_who} | ${_level} | ${_message}" >&2
 	# echo "${BASH_SOURCE[@]}"
-	echo "${_datestamp} ${_timestamp} | ${_formatted_who} | ${_level} | ${_message}" >&2
+#	echo "${_datestamp} ${_timestamp} | ${_formatted_who} | ${_level} | ${_message}" >&2
+	echo "${_datestamp} ${_timestamp} | ${_level} | ${_message}"
 }
 #
 # level helpers
@@ -258,7 +259,8 @@ function test_logger()
 #
 if [ "${BASH_SOURCE[0]}" != "${0}" ]
 then
-	info "script SOURCED, not run directly | ${NAME} | ignoring params: '${@}' | ok"
+#	info "script SOURCED, not run directly | ${NAME} | ignoring params: '${@}' | ok"
+    :
 else
 	# script called DIRECTLY, eg logger.sh info "hello"
 	#

@@ -56,7 +56,7 @@ function die()
     # MAIN
     #
     #############################################################################
-    timestamp
+    # timestamp
     #
     # elabora eventuali opzioni di comando
     #
@@ -65,7 +65,7 @@ function die()
         get_options ${*}
     fi
 
-    echo "INFO  | CHECK         files..."
+    info "CHECK         files..."
     #
     # entrambi i file dati non dovrebbe esistere, pena la sovrascrittura
     # dei dati durante la decrittazione !!!
@@ -96,29 +96,29 @@ function die()
     #
     # il file dati non esiste, procedo alla decrittazione
     #
-    echo "INFO  | CHECK         files...OK"
+    info "CHECK         files...OK"
     #
     # chiedo password prima di iniziare fino a che non viene inserita
     #
     while ! get_password
     do
-        echo "ERROR | e' necessario inserire una password per continuare"
+        error "e' necessario inserire una password per continuare"
     done
 
     echo "INFO  | DECRIPTAZIONE ${ENCFILE}..."
     if decrypt
     then
-        echo "INFO  | DECRIPTAZIONE ${ENCFILE}...OK"
+        info "DECRIPTAZIONE ${ENCFILE}...OK"
     else
         #
         # openssl ha restituito un errore
         # cancello file dati errato ed esco
         #
-        echo "ERROR | DECRIPTAZIONE ${ENCFILE} FALLITA"
-        echo "INFO  | CANCELLAZIONE ${DATAFILE}..."
+        error "DECRIPTAZIONE ${ENCFILE} FALLITA"
+        info "CANCELLAZIONE ${DATAFILE}..."
         if delete_datafile
         then
-            echo "INFO  | CANCELLAZIONE ${DATAFILE}...OK"
+            info "CANCELLAZIONE ${DATAFILE}...OK"
         else
             #
             # la cancellazione del file dati non
@@ -133,10 +133,10 @@ function die()
     # se non ci sono errori il file dati e' presente
     # lo apro con editor di sistema e attendo...
     #
-    echo "INFO  | EDIT          ${DATAFILE}..."
+    info "EDIT          ${DATAFILE}..."
     if open -W "${DATAFILE}"
     then
-        echo "INFO  | EDIT          ${DATAFILE}...OK"
+        info "EDIT          ${DATAFILE}...OK"
     else
         #
         # l'editor ha restituito un errore
@@ -150,10 +150,10 @@ function die()
     # e l'editor e' stato chiuso
     # procedo alla crittografia del file
     #
-    echo "INFO  | CRITTOGRAFIA  ${ENCFILE}..."
+    info "CRITTOGRAFIA  ${ENCFILE}..."
     if encrypt
     then
-        echo "INFO  | CRITTOGRAFIA  ${ENCFILE}...OK"
+        info "CRITTOGRAFIA  ${ENCFILE}...OK"
     else
         #
         # openssl ha restituito un errore
@@ -166,10 +166,10 @@ function die()
     # procedo con la cancellazione del file dati
     # TODO: aggiungere check esistenza file crittato
     #
-    echo "INFO  | CANCELLAZIONE ${DATAFILE}..."
+    info "CANCELLAZIONE ${DATAFILE}..."
     if delete_datafile
     then
-        echo "INFO  | CANCELLAZIONE ${DATAFILE}...OK"
+        info "CANCELLAZIONE ${DATAFILE}...OK"
     else
         #
         # la cancellazione del file dati non
@@ -178,8 +178,8 @@ function die()
         die "errore cancellando ${DATAFILE} !!!"
     fi
 
-    echo "INFO  | FINE"
-    echo "INFO  | per consultare log aprire: ${LOGFILE}"
+    info "FINE"
+    info "per consultare log aprire: ${LOGFILE}"
 # } 2>&1 | tee "${LOGFILE}"
 # 2> >(tee -a $TEMP_ERR) 1> >(tee -a $TEMP_CHK)
 # } 2>>"${LOGFILE}" 1> >(tee -a "${LOGFILE}") # stderr to logfile, stdout to terminal and logfile
