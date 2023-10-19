@@ -8,8 +8,8 @@
 #
 # percorsi base
 #
-SCRIPTPATH="$(dirname "${0}")"          # percorso script == percorso dati
-DATAPATH="$(dirname "${0}")"            # percorso dati == percorso script
+SCRIPTPATH="$(dirname "${0}")"              # percorso script == percorso dati
+DATAPATH="$(dirname "${0}")"                # percorso dati == percorso script
 #
 # nomi files
 #
@@ -21,9 +21,9 @@ DECRYPT="${SCRIPTPATH}/decrypt"             # script decryption
 #
 # percorsi di lavoro
 #
-LOGFILE="${DATAPATH}/${LOGFILENAME}"    # percorso file dati
-DATAFILE="${DATAPATH}/${DATAFILENAME}"  # percorso file dati
-ENCFILE="${DATAPATH}/${ENCFILENAME}"    # percorso file criptato
+LOGFILE="${DATAPATH}/${LOGFILENAME}"        # percorso file dati
+DATAFILE="${DATAPATH}/${DATAFILENAME}"      # percorso file dati
+ENCFILE="${DATAPATH}/${ENCFILENAME}"        # percorso file criptato
 #
 # opzioni, nel caso si vogliano implementare
 #
@@ -102,7 +102,7 @@ function die()
     exit 1
 }
 #
-# ritorna timestamp corrente
+# stampa timestamp corrente
 #
 function timestamp()
 {
@@ -115,6 +115,9 @@ function delete_datafile()
 {
     rm "${DATAFILE}"
 }
+#
+# stampa errore openssl
+#
 function print_encryption_error()
 {
     local line
@@ -159,7 +162,7 @@ function encrypt()
     return ${exitcode}
 }
 #
-# chiede password: se vuota esce male
+# chiede password: se vuota ritorna 1s
 #
 function get_password()
 {
@@ -215,7 +218,7 @@ function get_password()
     #
     echo "INFO  | CHECK         files...OK"
     #
-    # chiedo password prima di iniziare
+    # chiedo password prima di iniziare fino a che non viene inserita
     #
     while ! get_password
     do
@@ -256,7 +259,7 @@ function get_password()
         echo "INFO  | EDIT          ${DATAFILE}...OK"
     else
         #
-        # l'editor ha resistuito un errore
+        # l'editor ha restituito un errore
         # TODO: provare a catturare errore
         #
         die "errore aprendo ${DATAFILE} per editing !!!"
@@ -286,7 +289,7 @@ function get_password()
     echo "INFO  | CANCELLAZIONE ${DATAFILE}..."
     if delete_datafile
     then
-    echo "INFO  | CANCELLAZIONE ${DATAFILE}...OK"
+        echo "INFO  | CANCELLAZIONE ${DATAFILE}...OK"
     else
         #
         # la cancellazione del file dati non
