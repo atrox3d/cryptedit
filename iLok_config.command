@@ -105,7 +105,7 @@ function die()
         error "e' necessario inserire una password per continuare"
     done
 
-    echo "INFO  | DECRIPTAZIONE ${ENCFILE}..."
+    info "DECRIPTAZIONE ${ENCFILE}..."
     if decrypt
     then
         info "DECRIPTAZIONE ${ENCFILE}...OK"

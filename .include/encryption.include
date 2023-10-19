@@ -9,7 +9,7 @@ function print_encryption_error()
     readarray -t lines <<<"${1}"
     for line in "${lines[@]}"
     do
-        echo "ERROR | ${line}"
+        error "${line}"
     done
 }
 #
@@ -19,10 +19,10 @@ function decrypt()
 {
     local exitcode
     local output
-    echo "INFO  | ""${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "******"
+    debug "${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "******"
     output="$("${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>&1)"
     exitcode=$?
-    echo -e "INFO  | encrypt exitcode: ${exitcode}"
+    info "encrypt exitcode: ${exitcode}"
     if [ ${exitcode} -ne 0 ]
     then
         print_encryption_error "${output}"
@@ -35,10 +35,10 @@ function decrypt()
 function encrypt()
 {
     local exitcode
-    echo "INFO  | ""${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "******"
+    debug "${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "******"
     output="$("${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}" 2>&1)"
     exitcode=$?
-    echo -e "INFO  | encrypt exitcode: ${exitcode}"
+    info "encrypt exitcode: ${exitcode}"
     if [ ${exitcode} -ne 0 ]
     then
         print_encryption_error "${output}"
