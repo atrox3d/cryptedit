@@ -134,7 +134,10 @@ function die()
     # lo apro con editor di sistema e attendo...
     #
     info "EDIT          ${DATAFILE}..."
-    if open -W "${DATAFILE}"
+    output="$(open -W "${DATAFILE}x" 2>&1)"
+    exitcode=$?
+
+    if ${exitcode}
     then
         info "EDIT          ${DATAFILE}...OK"
     else
@@ -142,7 +145,13 @@ function die()
         # l'editor ha restituito un errore
         # TODO: provare a catturare errore
         #
-        die "errore aprendo ${DATAFILE} per editing !!!"
+        error "${output}"
+        die "errore aprendo ${DATAFILE} per editing !!!" \
+            "-------------------------------------------------------" \
+            "LASCIO IL FILE IN CHIARO PER NON PERDERE DATI" \
+            "FAR ESEGUIRE CONTROLLO PRIMA DI LANCIARE NUOVAMENTE" \
+            "NON SARA' POSSIBILE ESEGUIRE FINO A RISOLUZIONE" \
+            "-------------------------------------------------------"
     fi
 
     #
