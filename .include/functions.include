@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+. "${INCLUDEPATH}/.options.include"
 #
 # help dello script
 #
@@ -10,44 +12,6 @@ function get_help()
     echo "SINTASSI | -o output file"
     echo "SINTASSI | -n nuova installazione"
 
-}
-#
-# gestisce le opzioni di linea di comando
-#
-function get_options()
-{
-    while getopts ":i:o:nh" opt
-    do
-        case "${opt}" in
-            i)
-                DATAFILE="${DATAPATH}/${OPTARG}"  # percorso file dati
-                echo "DATAFILE=${DATAFILE}"
-            ;;
-            o)
-                ENCFILE="${DATAPATH}/${OPTARG}"  # percorso file criptato
-                echo "ENCFILE=${ENCFILE}"
-            ;;
-            n)
-                NEWINSTALL=true                  # TODO: gestire nuova installazione
-                echo "NEWINSTALL=${NEWINSTALL}"
-            ;;
-            h)
-                get_help                         # mostra aiuto ed esce
-                exit
-            ;;
-            \?)
-                # errore opzione non prevista
-                get_help
-                die "opzione non riconosciuta: -${opt}"
-            ;;
-            :)
-                # errore parametro mancante
-                get_help
-                die "l'opzione -${OPTARG} richiede un parametro"
-            ;;
-        esac
-    done
-    shift "$((OPTIND-1))"
 }
 #
 # esce dallo script
