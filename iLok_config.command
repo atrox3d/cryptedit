@@ -137,7 +137,7 @@ function die()
     output="$(open -W "${DATAFILE}" 2>&1)"
     exitcode=$?
 
-    if ${exitcode}
+    if [ ${exitcode} -eq 0 ]
     then
         info "EDIT          ${DATAFILE}...OK"
     else
@@ -194,4 +194,5 @@ function die()
 # } 2>>"${LOGFILE}" 1> >(tee -a "${LOGFILE}") # stderr to logfile, stdout to terminal and logfile
 } 1> >(tee "${LOGFILE}") 2> "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
 
-rm *.cpgz
+info "CANCELLAZIONE files *.cpgz creati per mancanza pacchetto office"
+rm *.cpgz || true
