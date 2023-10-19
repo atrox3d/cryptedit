@@ -12,26 +12,9 @@ SCRIPTPATH="$(dirname "${0}")"              # percorso script == percorso dati
 DATAPATH="${SCRIPTPATH}"                    # percorso dati == percorso script
 CONFIGPATH="${SCRIPTPATH}"                  # percorso dati == percorso script
 INCLUDEPATH="${SCRIPTPATH}"                 # percorso dati == percorso script
-#
-# nomi files
-#
-LOGFILENAME=$(basename "${0}" .command).log # <nome script>.log
-DATAFILENAME=iLok.xlsx                      # nome file dati
-ENCFILENAME=iLok.auth                       # nome file criptato
-ENCRYPT="${SCRIPTPATH}/encrypt"             # script encryption
-DECRYPT="${SCRIPTPATH}/decrypt"             # script decryption
-#
-# percorsi di lavoro
-#
-LOGFILE="${DATAPATH}/${LOGFILENAME}"        # percorso file dati
-DATAFILE="${DATAPATH}/${DATAFILENAME}"      # percorso file dati
-ENCFILE="${DATAPATH}/${ENCFILENAME}"        # percorso file criptato
-#
-# opzioni, nel caso si vogliano implementare
-#
-ENABLE_OPTIONS=false                    # TODO
-ENABLE_HISTORY=false                    # TODO
-ENABLE_MODULES=false                    # TODO
+
+CONFIG="${CONFIGPATH}/.iLok_config"
+. "${CONFIG}"
 #############################################################################
 #
 # FUNZIONI
