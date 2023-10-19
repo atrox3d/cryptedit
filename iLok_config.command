@@ -8,6 +8,7 @@
 #
 # percorsi base
 #
+#SCRIPTPATH="$(cd "$(dirname "$0")";pwd -P)" # percorso script == percorso dati
 SCRIPTPATH="$(dirname "${0}")"              # percorso script == percorso dati
 DATAPATH="${SCRIPTPATH}"                    # percorso dati == percorso script
 CONFIGPATH="${SCRIPTPATH}"                  # percorso dati == percorso script

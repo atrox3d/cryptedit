@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-. "${INCLUDEPATH}/.options.include"
+. "${INCLUDEPATH}/options.include"
+. "${INCLUDEPATH}/encryption.include"
 #
 # help dello script
 #
@@ -42,52 +43,6 @@ function timestamp()
 function delete_datafile()
 {
     rm "${DATAFILE}"
-}
-#
-# stampa errore openssl
-#
-function print_encryption_error()
-{
-    local line
-    local lines
-    readarray -t lines <<<"${1}"
-    for line in "${lines[@]}"
-    do
-        echo "ERROR | ${line}"
-    done
-}
-#
-# decripta il file
-#
-function decrypt()
-{
-    local exitcode
-    local output
-    echo "INFO  | ""${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "******"
-    output="$("${DECRYPT}" "${ENCFILE}" "${DATAFILE}" "${ENCPASS}" 2>&1)"
-    exitcode=$?
-    echo -e "INFO  | encrypt exitcode: ${exitcode}"
-    if [ ${exitcode} -ne 0 ]
-    then
-        print_encryption_error "${output}"
-    fi
-    return ${exitcode}
-}
-#
-# cripta il file
-#
-function encrypt()
-{
-    local exitcode
-    echo "INFO  | ""${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "******"
-    output="$("${ENCRYPT}" "${DATAFILE}" "${ENCFILE}" "${ENCPASS}" 2>&1)"
-    exitcode=$?
-    echo -e "INFO  | encrypt exitcode: ${exitcode}"
-    if [ ${exitcode} -ne 0 ]
-    then
-        print_encryption_error "${output}"
-    fi
-    return ${exitcode}
 }
 #
 # chiede password: se vuota ritorna 1s
