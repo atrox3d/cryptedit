@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+#set -x
+set -e
+echo $-
 #############################################################################
 #
 # CONFIG percorsi base
@@ -192,7 +195,7 @@ function die()
 # } 2>&1 | tee "${LOGFILE}"
 # 2> >(tee -a $TEMP_ERR) 1> >(tee -a $TEMP_CHK)
 # } 2>>"${LOGFILE}" 1> >(tee -a "${LOGFILE}") # stderr to logfile, stdout to terminal and logfile
-} 1> >(tee "${LOGFILE}") 2> "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
-
+#} 1> >(tee "${LOGFILE}") 2> "${LOGFILE}" # stderr to logfile, stdout to terminal and logfile
+}
 info "CANCELLAZIONE files *.cpgz creati per mancanza pacchetto office"
 rm *.cpgz || true

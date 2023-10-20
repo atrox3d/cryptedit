@@ -2,8 +2,8 @@
 #
 #	current directory and script name
 #
-HERE="$(dirname ${BASH_SOURCE[0]})"
-NAME="$(basename ${BASH_SOURCE[0]})"
+HERE="$(dirname ${0})"
+NAME="$(basename ${0})"
 #
 #	debug disabled - default
 #
@@ -31,7 +31,7 @@ function __DEBUG_TOGGLE()
 			#
 			#	__LOGGER_DEBUG must be yes or no
 			#
-			echo "${BASH_SOURCE[0]} | FATAL | unknown __DEBUG status : '$_LOGGER_DEBUG'"
+			echo "${0} | FATAL | unknown __DEBUG status : '$_LOGGER_DEBUG'"
 			exit 1
 		;;
 	esac
@@ -41,7 +41,7 @@ function __DEBUG_TOGGLE()
 #
 function __DEBUG()
 {
-	if [ "${__LOGGER_DEBUG}" == "yes" ]
+	if [ "${__LOGGER_DEBUG}" = "yes" ]
 	then
 		echo "__DEBUG | ${*}" &> /dev/stderr
 	fi
@@ -77,10 +77,10 @@ function logger_setlevel()
 	level="${level^^}"
 
 	# normalize WARN to WARNING
-	[ "${level}" == "WARN" ] && level=WARNING
+	[ "${level}"  "WARN" ] && level=WARNING
 
 	# if $level is not in the keys exits
-	[ "${LOG_LEVELS[${level}]+EXISTS}" == "EXISTS" ] || {
+	[ "${LOG_LEVELS[${level}]+EXISTS}" = "EXISTS" ] || {
 		fatal "logger_setlevel | unknown level ${level}"
 		exit 255
 	}
@@ -95,7 +95,7 @@ function logger_setlevel()
 	#
 	for _level in "${LOG_LEVELS_IDX[@]}"
 	do
-		if [ "${_level}" == "${level}" ]
+		if [ "${_level}" = "${level}" ]
 		then
 			_level="[${_level}"
 		fi
@@ -116,9 +116,9 @@ function logger_getlevelcode()
 {
 	local level="${1:-UNSET}"
 	level="${level^^}"
-	[ "${level}" == "WARN" ] && level=WARNING
+	[ "${level}" = "WARN" ] && level=WARNING
 
-	[ "${LOG_LEVELS[${level}]+EXISTS}" == EXISTS ] || {
+	[ "${LOG_LEVELS[${level}]+EXISTS}" = EXISTS ] || {
 		fatal "logger_getlevelcode | unknown level ${level}"
 		exit 255
 	}
@@ -133,10 +133,11 @@ function logger_getlevelcode()
 function logger_islevelenabled()
 {
 	local level="${1:-UNSET}"
-	level="${level^^}"
-	[ "${level}" == "WARN" ] && level=WARNING
+#	level="${level^^}"
+	level="${level:u}"
+	[ "${level}" = "WARN" ] && level=WARNING
 
-	[ "${LOG_LEVELS[${level}]+EXISTS}" == EXISTS ] || {
+	[ "${LOG_LEVELS[${level}]+EXISTS}" = EXISTS ] || {
 		fatal "logger_islevelenabled | unknown level ${level}"
 		exit 255
 	}
@@ -170,17 +171,22 @@ function log()
 	#
 	#	check level name
 	#
-	case ${_level,,} in
+	echo "DEBUG ${_level:l}"
+    # case ${_level,,} in
+	case ${_level:l} in
 		--debug|--info|--warning|--error|--fatal|--super)
+			echo "DEBUG case dunder"
 			#
 			#	remove "__" from level name and capitalize it
 			#
 			_level="${1:2}"
-			_level="${_level^^}"
+            # _level="${_level^^}"
+			_level="${_level:u}"
 			#
 			#	normalize warn
 			#
-			[ "${_level}" == WARNING ] && _level=WARN
+			echo "DEBUG _level=${_level}"
+			[ "${_level}" = WARNING ] && _level=WARN
 			#
 			#	returns if level is not enabled
 			#
@@ -194,29 +200,31 @@ function log()
 			######################################################
 			# DEFENSIVE PROGRAMMING
 			######################################################
-			echo "${BASH_SOURCE[0]} | FATAL | unknown level name: '${_level}'"  >&2
+			echo "case star"
+			echo "${0} | FATAL | unknown level name: '${_level}'"  >&2
 			exit 1
 		;;
 	esac
 
 	__DEBUG "\${0} = ${0}"
-	__DEBUG "\${BASH_SOURCE[0]} = ${BASH_SOURCE[0]}"
+	__DEBUG "\${0} = ${0}"
 
 	if [ "${0}" = "bash" ]
 	then
 		#
 		#	sourcing from command line, force who to this script
 		#
-		_who="${BASH_SOURCE[0]}"
+		_who="${0}"
 	else
 		# _who="${0}"
 		# _who="${BASH_SOURCE[2]}"
 		#
 		#	get the first caller that is not logger
 		#
-		for _who in "${BASH_SOURCE[@]}"
+		echo "DEBUG _who"
+		for _who in "${BASH_SOURCE[0]:-${(%):-%x}}"
 		do
-			if [ "${_who}" != "${BASH_SOURCE[0]}" ]
+			if [ "${_who}" != "${0}" ]
 			then
 				break
 			fi
@@ -257,26 +265,29 @@ function test_logger()
 #
 # source or run
 #
-if [ "${BASH_SOURCE[0]}" != "${0}" ]
-then
-#	info "script SOURCED, not run directly | ${NAME} | ignoring params: '${@}' | ok"
-    :
-else
-	# script called DIRECTLY, eg logger.sh info "hello"
-	#
-	# check if level function exists
-	#
-	LEVELS=(debug info warn warning error fatal)
-	LEVEL="${1}"
-	if echo "${LEVELS[@]}" | grep -qw "${LEVEL,,}"
-	then
-		#
-		#	call the function
-		#
-		# __DEBUG_ENABLE
-		"${LEVEL}" "${@:2}"
-	else
-		fatal "unknown level | ${LEVEL^^}"
-		fatal "syntax: ${NAME} {info|warn|warning|error|fatal} message"
-	fi
-fi
+#if [ "${0}" != "${0}" ]
+#then
+##	info "script SOURCED, not run directly | ${NAME} | ignoring params: '${@}' | ok"
+#    :
+#else
+#	# script called DIRECTLY, eg logger.sh info "hello"
+#	#
+#	# check if level function exists
+#	#
+#	LEVELS=(debug info warn warning error fatal)
+#	LEVEL="${1}"
+#	echo "DEBUG LEVEL=$LEVEL"
+#	if echo "${LEVELS[@]}" | grep -qw "${LEVEL:l}"
+#	then
+#		#
+#		#	call the function
+#		#
+#		# __DEBUG_ENABLE
+#		echo "${LEVEL}" "${@:2}"
+#		"${LEVEL}" "${@:2}"
+#	else
+#		fatal "unknown level | ${LEVEL^^}"
+#		fatal "syntax: ${NAME} {info|warn|warning|error|fatal} message"
+#	fi
+#	exit
+#fi
