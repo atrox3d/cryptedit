@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 DATAFILE="${1}"
 ENCFILE="${2}"

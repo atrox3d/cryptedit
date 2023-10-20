@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 . "${INCLUDEPATH}/options.include" || die "impossibile caricare ${INCLUDEPATH}/options.include"
 . "${INCLUDEPATH}/encryption.include" || die "impossibile caricare ${INCLUDEPATH}/encryption.include"
