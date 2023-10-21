@@ -34,7 +34,8 @@ function delete_datafile()
 #
 function get_password()
 {
-    read -sp 'PASSWORD: ' ENCPASS 2>&1
+#    read -sp 'PASSWORD: ' ENCPASS 2>&1
+    read -s 'ENCPASS?PASSWORD: ' 2>&1
     echo ""
     [ -z "${ENCPASS}" ] && return 1 || return 0
 }
