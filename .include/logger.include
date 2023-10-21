@@ -2,8 +2,8 @@
 #
 #	current directory and script name
 #
-HERE="$(dirname ${BASH_SOURCE[0]})"
-NAME="$(basename ${BASH_SOURCE[0]})"
+HERE="$(dirname ${BASH_SOURCE[0]:-${(%):-%x}})"
+NAME="$(basename ${BASH_SOURCE[0]:-${(%):-%x}})"
 #
 #	debug disabled - default
 #
@@ -31,7 +31,7 @@ function __DEBUG_TOGGLE()
 			#
 			#	__LOGGER_DEBUG must be yes or no
 			#
-			echo "${BASH_SOURCE[0]} | FATAL | unknown __DEBUG status : '$_LOGGER_DEBUG'"
+			echo "${BASH_SOURCE[0]:-${(%):-%x}} | FATAL | unknown __DEBUG status : '$_LOGGER_DEBUG'"
 			exit 1
 		;;
 	esac
@@ -194,20 +194,20 @@ function log()
 			######################################################
 			# DEFENSIVE PROGRAMMING
 			######################################################
-			echo "${BASH_SOURCE[0]} | FATAL | unknown level name: '${_level}'"  >&2
+			echo "${BASH_SOURCE[0]:-${(%):-%x}} | FATAL | unknown level name: '${_level}'"  >&2
 			exit 1
 		;;
 	esac
 
 	__DEBUG "\${0} = ${0}"
-	__DEBUG "\${BASH_SOURCE[0]} = ${BASH_SOURCE[0]}"
+	__DEBUG "\${BASH_SOURCE[0]} = ${BASH_SOURCE[0]:-${(%):-%x}}"
 
 	if [ "${0}" = "bash" ]
 	then
 		#
 		#	sourcing from command line, force who to this script
 		#
-		_who="${BASH_SOURCE[0]}"
+		_who="${BASH_SOURCE[0]:-${(%):-%x}}"
 	else
 		# _who="${0}"
 		# _who="${BASH_SOURCE[2]}"
@@ -216,7 +216,7 @@ function log()
 		#
 		for _who in "${BASH_SOURCE[@]}"
 		do
-			if [ "${_who}" != "${BASH_SOURCE[0]}" ]
+			if [ "${_who}" != "${BASH_SOURCE[0]:-${(%):-%x}}" ]
 			then
 				break
 			fi
@@ -257,7 +257,7 @@ function test_logger()
 #
 # source or run
 #
-if [ "${BASH_SOURCE[0]}" != "${0}" ]
+if [ "${BASH_SOURCE[0]:-${(%):-%x}}" != "${0}" ]
 then
 #	info "script SOURCED, not run directly | ${NAME} | ignoring params: '${@}' | ok"
     :
