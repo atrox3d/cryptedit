@@ -31,6 +31,7 @@ function die()
     done
     echo "FATAL | Termino programma"
     echo "FATAL | per consultare log aprire: ${LOGFILE}"
+    echo "FATAL | * * * * PER ASSISTENZA MANDARE file '$(basename ${LOGFILE})' * * * *"
     exit 1
 }
 #
