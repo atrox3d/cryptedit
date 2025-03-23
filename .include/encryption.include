@@ -5,11 +5,11 @@
 function print_encryption_error()
 {
     local line
-    local lines
-    readarray -t lines <<<"${1}"
+    local -a lines  # Declare 'lines' as an array
+    lines=(${(f)1}) # Split the input string into an array by lines
     for line in "${lines[@]}"
     do
-        echo "ERROR | ${line}"
+        error "${line}"
     done
 }
 #
